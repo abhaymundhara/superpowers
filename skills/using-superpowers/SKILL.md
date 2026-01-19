@@ -76,7 +76,7 @@ When multiple skills could apply, use this order:
 
 ## Skill Types
 
-**Rigid** (TDD, debugging): Follow exactly. Don't adapt away discipline.
+**Rigid** (SDD, debugging): Follow exactly. Don't adapt away discipline.
 
 **Flexible** (patterns): Adapt principles to context.
 
@@ -85,3 +85,39 @@ The skill itself tells you which.
 ## User Instructions
 
 Instructions say WHAT, not HOW. "Add X" or "Fix Y" doesn't mean skip workflows.
+
+## All Available Skills
+
+### Core Workflow
+- **brainstorming** - Interactive design refinement before coding
+- **writing-plans** - Create detailed implementation plans
+- **spec-driven-development** - RED-GREEN-REFACTOR: write specs first
+- **subagent-driven-development** - Execute plans with fresh subagents + two-stage review
+- **executing-plans** - Batch execution with human checkpoints
+- **finishing-a-development-branch** - Complete work: merge/PR/cleanup decisions
+
+### Collaboration
+- **requesting-code-review** - Structured code review before merging
+- **receiving-code-review** - Respond to feedback effectively
+- **dispatching-parallel-agents** - Run independent tasks concurrently
+
+### Debugging & Quality
+- **systematic-debugging** - 4-phase root cause investigation
+- **verification-before-completion** - Confirm fixes before claiming done
+- **using-git-worktrees** - Isolated development branches
+
+### Meta
+- **writing-skills** - Create and test new skills
+- **using-superpowers** - This skill: how to use skills
+
+### Specialized Tools
+- **agent-browser** - Headless browser automation CLI
+- **claudeception** - Claude-in-Claude debugging patterns
+- **context7** - Context7 MCP documentation lookup
+- **frontend-design** - Production-grade frontend interfaces
+- **frontend-responsive-ui** - Mobile-first responsive layouts
+- **gemini-computer-use** - Gemini 2.5 browser automation
+- **humanizer** - Humanize AI outputs
+- **openai-docs-skill** - OpenAI API documentation
+- **playwright-skill** - Complete Playwright browser automation
+- **vercel-react-best-practices** - Vercel React/Next.js performance patterns
