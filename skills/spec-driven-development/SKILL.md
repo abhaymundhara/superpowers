@@ -1,15 +1,15 @@
 ---
-name: test-driven-development
+name: spec-driven-development
 description: Use when implementing any feature or bugfix, before writing implementation code
 ---
 
-# Test-Driven Development (TDD)
+# Spec-Driven Development (SDD)
 
 ## Overview
 
-Write the test first. Watch it fail. Write minimal code to pass.
+Write the spec first. Watch it fail. Write minimal code to pass.
 
-**Core principle:** If you didn't watch the test fail, you don't know if it tests the right thing.
+**Core principle:** If you didn't watch the spec fail, you don't know if it tests the right thing.
 
 **Violating the letter of the rules is violating the spirit of the rules.**
 
@@ -26,30 +26,30 @@ Write the test first. Watch it fail. Write minimal code to pass.
 - Generated code
 - Configuration files
 
-Thinking "skip TDD just this once"? Stop. That's rationalization.
+Thinking "skip SDD just this once"? Stop. That's rationalization.
 
 ## The Iron Law
 
 ```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+NO PRODUCTION CODE WITHOUT A FAILING SPEC FIRST
 ```
 
-Write code before the test? Delete it. Start over.
+Write code before the spec? Delete it. Start over.
 
 **No exceptions:**
 - Don't keep it as "reference"
-- Don't "adapt" it while writing tests
+- Don't "adapt" it while writing specs
 - Don't look at it
 - Delete means delete
 
-Implement fresh from tests. Period.
+Implement fresh from specs. Period.
 
 ## Red-Green-Refactor
 
 ```dot
-digraph tdd_cycle {
+digraph sdd_cycle {
     rankdir=LR;
-    red [label="RED\nWrite failing test", shape=box, style=filled, fillcolor="#ffcccc"];
+    red [label="RED\nWrite failing spec", shape=box, style=filled, fillcolor="#ffcccc"];
     verify_red [label="Verify fails\ncorrectly", shape=diamond];
     green [label="GREEN\nMinimal code", shape=box, style=filled, fillcolor="#ccffcc"];
     verify_green [label="Verify passes\nAll green", shape=diamond];
@@ -68,13 +68,13 @@ digraph tdd_cycle {
 }
 ```
 
-### RED - Write Failing Test
+### RED - Write Failing Spec
 
-Write one minimal test showing what should happen.
+Write one minimal spec showing what should happen.
 
 <Good>
 ```typescript
-test('retries failed operations 3 times', async () => {
+spec('retries failed operations 3 times', async () => {
   let attempts = 0;
   const operation = () => {
     attempts++;
@@ -88,12 +88,12 @@ test('retries failed operations 3 times', async () => {
   expect(attempts).toBe(3);
 });
 ```
-Clear name, tests real behavior, one thing
+Clear name, specs real behavior, one thing
 </Good>
 
 <Bad>
 ```typescript
-test('retry works', async () => {
+spec('retry works', async () => {
   const mock = jest.fn()
     .mockRejectedValueOnce(new Error())
     .mockRejectedValueOnce(new Error())
@@ -102,7 +102,7 @@ test('retry works', async () => {
   expect(mock).toHaveBeenCalledTimes(3);
 });
 ```
-Vague name, tests mock not code
+Vague name, specs mock not code
 </Bad>
 
 **Requirements:**
@@ -115,21 +115,21 @@ Vague name, tests mock not code
 **MANDATORY. Never skip.**
 
 ```bash
-npm test path/to/test.test.ts
+npm test path/to/spec.spec.ts
 ```
 
 Confirm:
-- Test fails (not errors)
+- Spec fails (not errors)
 - Failure message is expected
 - Fails because feature missing (not typos)
 
-**Test passes?** You're testing existing behavior. Fix test.
+**Spec passes?** You're testing existing behavior. Fix spec.
 
-**Test errors?** Fix error, re-run until it fails correctly.
+**Spec errors?** Fix error, re-run until it fails correctly.
 
 ### GREEN - Minimal Code
 
-Write simplest code to pass the test.
+Write simplest code to pass the spec.
 
 <Good>
 ```typescript
@@ -163,24 +163,24 @@ async function retryOperation<T>(
 Over-engineered
 </Bad>
 
-Don't add features, refactor other code, or "improve" beyond the test.
+Don't add features, refactor other code, or "improve" beyond the spec.
 
 ### Verify GREEN - Watch It Pass
 
 **MANDATORY.**
 
 ```bash
-npm test path/to/test.test.ts
+npm test path/to/spec.spec.ts
 ```
 
 Confirm:
-- Test passes
-- Other tests still pass
+- Spec passes
+- Other specs still pass
 - Output pristine (no errors, warnings)
 
-**Test fails?** Fix code, not test.
+**Spec fails?** Fix code, not spec.
 
-**Other tests fail?** Fix now.
+**Other specs fail?** Fix now.
 
 ### REFACTOR - Clean Up
 
@@ -189,31 +189,31 @@ After green only:
 - Improve names
 - Extract helpers
 
-Keep tests green. Don't add behavior.
+Keep specs green. Don't add behavior.
 
 ### Repeat
 
-Next failing test for next feature.
+Next failing spec for next feature.
 
-## Good Tests
+## Good Specs
 
 | Quality | Good | Bad |
 |---------|------|-----|
-| **Minimal** | One thing. "and" in name? Split it. | `test('validates email and domain and whitespace')` |
-| **Clear** | Name describes behavior | `test('test1')` |
+| **Minimal** | One thing. "and" in name? Split it. | `spec('validates email and domain and whitespace')` |
+| **Clear** | Name describes behavior | `spec('spec1')` |
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
 ## Why Order Matters
 
-**"I'll write tests after to verify it works"**
+**"I'll write specs after to verify it works"**
 
-Tests written after code pass immediately. Passing immediately proves nothing:
-- Might test wrong thing
-- Might test implementation, not behavior
+Specs written after code pass immediately. Passing immediately proves nothing:
+- Might spec wrong thing
+- Might spec implementation, not behavior
 - Might miss edge cases you forgot
 - You never saw it catch the bug
 
-Test-first forces you to see the test fail, proving it actually tests something.
+Spec-first forces you to see the spec fail, proving it actually tests something.
 
 **"I already manually tested all the edge cases"**
 
@@ -223,69 +223,69 @@ Manual testing is ad-hoc. You think you tested everything but:
 - Easy to forget cases under pressure
 - "It worked when I tried it" ≠ comprehensive
 
-Automated tests are systematic. They run the same way every time.
+Automated specs are systematic. They run the same way every time.
 
 **"Deleting X hours of work is wasteful"**
 
 Sunk cost fallacy. The time is already gone. Your choice now:
-- Delete and rewrite with TDD (X more hours, high confidence)
-- Keep it and add tests after (30 min, low confidence, likely bugs)
+- Delete and rewrite with SDD (X more hours, high confidence)
+- Keep it and add specs after (30 min, low confidence, likely bugs)
 
-The "waste" is keeping code you can't trust. Working code without real tests is technical debt.
+The "waste" is keeping code you can't trust. Working code without real specs is technical debt.
 
-**"TDD is dogmatic, being pragmatic means adapting"**
+**"SDD is dogmatic, being pragmatic means adapting"**
 
-TDD IS pragmatic:
+SDD IS pragmatic:
 - Finds bugs before commit (faster than debugging after)
-- Prevents regressions (tests catch breaks immediately)
-- Documents behavior (tests show how to use code)
-- Enables refactoring (change freely, tests catch breaks)
+- Prevents regressions (specs catch breaks immediately)
+- Documents behavior (specs show how to use code)
+- Enables refactoring (change freely, specs catch breaks)
 
 "Pragmatic" shortcuts = debugging in production = slower.
 
-**"Tests after achieve the same goals - it's spirit not ritual"**
+**"Specs after achieve the same goals - it's spirit not ritual"**
 
-No. Tests-after answer "What does this do?" Tests-first answer "What should this do?"
+No. Specs-after answer "What does this do?" Specs-first answer "What should this do?"
 
-Tests-after are biased by your implementation. You test what you built, not what's required. You verify remembered edge cases, not discovered ones.
+Specs-after are biased by your implementation. You spec what you built, not what's required. You verify remembered edge cases, not discovered ones.
 
-Tests-first force edge case discovery before implementing. Tests-after verify you remembered everything (you didn't).
+Specs-first force edge case discovery before implementing. Specs-after verify you remembered everything (you didn't).
 
-30 minutes of tests after ≠ TDD. You get coverage, lose proof tests work.
+30 minutes of specs after ≠ SDD. You get coverage, lose proof specs work.
 
 ## Common Rationalizations
 
 | Excuse | Reality |
 |--------|---------|
-| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
-| "I'll test after" | Tests passing immediately prove nothing. |
-| "Tests after achieve same goals" | Tests-after = "what does this do?" Tests-first = "what should this do?" |
+| "Too simple to spec" | Simple code breaks. Spec takes 30 seconds. |
+| "I'll spec after" | Specs passing immediately prove nothing. |
+| "Specs after achieve same goals" | Specs-after = "what does this do?" Specs-first = "what should this do?" |
 | "Already manually tested" | Ad-hoc ≠ systematic. No record, can't re-run. |
 | "Deleting X hours is wasteful" | Sunk cost fallacy. Keeping unverified code is technical debt. |
-| "Keep as reference, write tests first" | You'll adapt it. That's testing after. Delete means delete. |
-| "Need to explore first" | Fine. Throw away exploration, start with TDD. |
-| "Test hard = design unclear" | Listen to test. Hard to test = hard to use. |
-| "TDD will slow me down" | TDD faster than debugging. Pragmatic = test-first. |
+| "Keep as reference, write specs first" | You'll adapt it. That's spec-ing after. Delete means delete. |
+| "Need to explore first" | Fine. Throw away exploration, start with SDD. |
+| "Spec hard = design unclear" | Listen to spec. Hard to spec = hard to use. |
+| "SDD will slow me down" | SDD faster than debugging. Pragmatic = spec-first. |
 | "Manual test faster" | Manual doesn't prove edge cases. You'll re-test every change. |
-| "Existing code has no tests" | You're improving it. Add tests for existing code. |
+| "Existing code has no specs" | You're improving it. Add specs for existing code. |
 
 ## Red Flags - STOP and Start Over
 
-- Code before test
-- Test after implementation
-- Test passes immediately
-- Can't explain why test failed
-- Tests added "later"
+- Code before spec
+- Spec after implementation
+- Spec passes immediately
+- Can't explain why spec failed
+- Specs added "later"
 - Rationalizing "just this once"
 - "I already manually tested it"
-- "Tests after achieve the same purpose"
+- "Specs after achieve the same purpose"
 - "It's about spirit not ritual"
 - "Keep as reference" or "adapt existing code"
 - "Already spent X hours, deleting is wasteful"
-- "TDD is dogmatic, I'm being pragmatic"
+- "SDD is dogmatic, I'm being pragmatic"
 - "This is different because..."
 
-**All of these mean: Delete code. Start over with TDD.**
+**All of these mean: Delete code. Start over with SDD.**
 
 ## Example: Bug Fix
 
@@ -293,7 +293,7 @@ Tests-first force edge case discovery before implementing. Tests-after verify yo
 
 **RED**
 ```typescript
-test('rejects empty email', async () => {
+spec('rejects empty email', async () => {
   const result = await submitForm({ email: '' });
   expect(result.error).toBe('Email required');
 });
@@ -328,44 +328,44 @@ Extract validation for multiple fields if needed.
 
 Before marking work complete:
 
-- [ ] Every new function/method has a test
-- [ ] Watched each test fail before implementing
-- [ ] Each test failed for expected reason (feature missing, not typo)
-- [ ] Wrote minimal code to pass each test
-- [ ] All tests pass
+- [ ] Every new function/method has a spec
+- [ ] Watched each spec fail before implementing
+- [ ] Each spec failed for expected reason (feature missing, not typo)
+- [ ] Wrote minimal code to pass each spec
+- [ ] All specs pass
 - [ ] Output pristine (no errors, warnings)
-- [ ] Tests use real code (mocks only if unavoidable)
+- [ ] Specs use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
 
-Can't check all boxes? You skipped TDD. Start over.
+Can't check all boxes? You skipped SDD. Start over.
 
 ## When Stuck
 
 | Problem | Solution |
 |---------|----------|
-| Don't know how to test | Write wished-for API. Write assertion first. Ask your human partner. |
-| Test too complicated | Design too complicated. Simplify interface. |
+| Don't know how to spec | Write wished-for API. Write assertion first. Ask your human partner. |
+| Spec too complicated | Design too complicated. Simplify interface. |
 | Must mock everything | Code too coupled. Use dependency injection. |
-| Test setup huge | Extract helpers. Still complex? Simplify design. |
+| Spec setup huge | Extract helpers. Still complex? Simplify design. |
 
 ## Debugging Integration
 
-Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression.
+Bug found? Write failing spec reproducing it. Follow SDD cycle. Spec proves fix and prevents regression.
 
-Never fix bugs without a test.
+Never fix bugs without a spec.
 
-## Testing Anti-Patterns
+## Spec Anti-Patterns
 
-When adding mocks or test utilities, read @testing-anti-patterns.md to avoid common pitfalls:
-- Testing mock behavior instead of real behavior
-- Adding test-only methods to production classes
+When adding mocks or spec utilities, read @testing-anti-patterns.md to avoid common pitfalls:
+- Specing mock behavior instead of real behavior
+- Adding spec-only methods to production classes
 - Mocking without understanding dependencies
 
 ## Final Rule
 
 ```
-Production code → test exists and failed first
-Otherwise → not TDD
+Production code → spec exists and failed first
+Otherwise → not SDD
 ```
 
 No exceptions without your human partner's permission.

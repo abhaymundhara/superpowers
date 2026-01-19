@@ -1,20 +1,20 @@
 # Testing Anti-Patterns
 
-**Load this reference when:** writing or changing tests, adding mocks, or tempted to add test-only methods to production code.
+**Load this reference when:** writing or changing specs, adding mocks, or tempted to add spec-only methods to production code.
 
 ## Overview
 
-Tests must verify real behavior, not mock behavior. Mocks are a means to isolate, not the thing being tested.
+Tests must verify real behavior, not mock behavior. Mocks are a means to isolate, not the thing being speced.
 
 **Core principle:** Test what the code does, not what the mocks do.
 
-**Following strict TDD prevents these anti-patterns.**
+**Following strict SDD prevents these anti-patterns.**
 
 ## The Iron Laws
 
 ```
-1. NEVER test mock behavior
-2. NEVER add test-only methods to production classes
+1. NEVER spec mock behavior
+2. NEVER add spec-only methods to production classes
 3. NEVER mock without understanding dependencies
 ```
 
@@ -23,7 +23,7 @@ Tests must verify real behavior, not mock behavior. Mocks are a means to isolate
 **The violation:**
 ```typescript
 // ❌ BAD: Testing that the mock exists
-test('renders sidebar', () => {
+spec('renders sidebar', () => {
   render(<Page />);
   expect(screen.getByTestId('sidebar-mock')).toBeInTheDocument();
 });
@@ -34,27 +34,27 @@ test('renders sidebar', () => {
 - Test passes when mock is present, fails when it's not
 - Tells you nothing about real behavior
 
-**your human partner's correction:** "Are we testing the behavior of a mock?"
+**your human partner's correction:** "Are we specing the behavior of a mock?"
 
 **The fix:**
 ```typescript
 // ✅ GOOD: Test real component or don't mock it
-test('renders sidebar', () => {
+spec('renders sidebar', () => {
   render(<Page />);  // Don't mock sidebar
   expect(screen.getByRole('navigation')).toBeInTheDocument();
 });
 
 // OR if sidebar must be mocked for isolation:
-// Don't assert on the mock - test Page's behavior with sidebar present
+// Don't assert on the mock - spec Page's behavior with sidebar present
 ```
 
 ### Gate Function
 
 ```
 BEFORE asserting on any mock element:
-  Ask: "Am I testing real component behavior or just mock existence?"
+  Ask: "Am I specing real component behavior or just mock existence?"
 
-  IF testing mock existence:
+  IF specing mock existence:
     STOP - Delete the assertion or unmock the component
 
   Test real behavior instead
@@ -64,7 +64,7 @@ BEFORE asserting on any mock element:
 
 **The violation:**
 ```typescript
-// ❌ BAD: destroy() only used in tests
+// ❌ BAD: destroy() only used in specs
 class Session {
   async destroy() {  // Looks like production API!
     await this._workspaceManager?.destroyWorkspace(this.id);
@@ -72,22 +72,22 @@ class Session {
   }
 }
 
-// In tests
+// In specs
 afterEach(() => session.destroy());
 ```
 
 **Why this is wrong:**
-- Production class polluted with test-only code
+- Production class polluted with spec-only code
 - Dangerous if accidentally called in production
 - Violates YAGNI and separation of concerns
 - Confuses object lifecycle with entity lifecycle
 
 **The fix:**
 ```typescript
-// ✅ GOOD: Test utilities handle test cleanup
+// ✅ GOOD: Test utilities handle spec cleanup
 // Session has no destroy() - it's stateless in production
 
-// In test-utils/
+// In spec-utils/
 export async function cleanupSession(session: Session) {
   const workspace = session.getWorkspaceInfo();
   if (workspace) {
@@ -95,7 +95,7 @@ export async function cleanupSession(session: Session) {
   }
 }
 
-// In tests
+// In specs
 afterEach(() => cleanupSession(session));
 ```
 
@@ -103,11 +103,11 @@ afterEach(() => cleanupSession(session));
 
 ```
 BEFORE adding any method to production class:
-  Ask: "Is this only used by tests?"
+  Ask: "Is this only used by specs?"
 
   IF yes:
     STOP - Don't add it
-    Put it in test utilities instead
+    Put it in spec utilities instead
 
   Ask: "Does this class own this resource's lifecycle?"
 
@@ -119,9 +119,9 @@ BEFORE adding any method to production class:
 
 **The violation:**
 ```typescript
-// ❌ BAD: Mock breaks test logic
-test('detects duplicate server', () => {
-  // Mock prevents config write that test depends on!
+// ❌ BAD: Mock breaks spec logic
+spec('detects duplicate server', () => {
+  // Mock prevents config write that spec depends on!
   vi.mock('ToolCatalog', () => ({
     discoverAndCacheTools: vi.fn().mockResolvedValue(undefined)
   }));
@@ -132,15 +132,15 @@ test('detects duplicate server', () => {
 ```
 
 **Why this is wrong:**
-- Mocked method had side effect test depended on (writing config)
+- Mocked method had side effect spec depended on (writing config)
 - Over-mocking to "be safe" breaks actual behavior
 - Test passes for wrong reason or fails mysteriously
 
 **The fix:**
 ```typescript
 // ✅ GOOD: Mock at correct level
-test('detects duplicate server', () => {
-  // Mock the slow part, preserve behavior test needs
+spec('detects duplicate server', () => {
+  // Mock the slow part, preserve behavior spec needs
   vi.mock('MCPServerManager'); // Just mock slow server startup
 
   await addServer(config);  // Config written
@@ -155,16 +155,16 @@ BEFORE mocking any method:
   STOP - Don't mock yet
 
   1. Ask: "What side effects does the real method have?"
-  2. Ask: "Does this test depend on any of those side effects?"
-  3. Ask: "Do I fully understand what this test needs?"
+  2. Ask: "Does this spec depend on any of those side effects?"
+  3. Ask: "Do I fully understand what this spec needs?"
 
   IF depends on side effects:
     Mock at lower level (the actual slow/external operation)
-    OR use test doubles that preserve necessary behavior
-    NOT the high-level method the test depends on
+    OR use spec doubles that preserve necessary behavior
+    NOT the high-level method the spec depends on
 
-  IF unsure what test depends on:
-    Run test with real implementation FIRST
+  IF unsure what spec depends on:
+    Run spec with real implementation FIRST
     Observe what actually needs to happen
     THEN add minimal mocking at the right level
 
@@ -194,7 +194,7 @@ const mockResponse = {
 - **Tests pass but integration fails** - Mock incomplete, real API complete
 - **False confidence** - Test proves nothing about real behavior
 
-**The Iron Rule:** Mock the COMPLETE data structure as it exists in reality, not just fields your immediate test uses.
+**The Iron Rule:** Mock the COMPLETE data structure as it exists in reality, not just fields your immediate spec uses.
 
 **The fix:**
 ```typescript
@@ -230,19 +230,19 @@ BEFORE creating mock responses:
 **The violation:**
 ```
 ✅ Implementation complete
-❌ No tests written
-"Ready for testing"
+❌ No specs written
+"Ready for specing"
 ```
 
 **Why this is wrong:**
 - Testing is part of implementation, not optional follow-up
-- TDD would have caught this
-- Can't claim complete without tests
+- SDD would have caught this
+- Can't claim complete without specs
 
 **The fix:**
 ```
-TDD cycle:
-1. Write failing test
+SDD cycle:
+1. Write failing spec
 2. Implement to pass
 3. Refactor
 4. THEN claim complete
@@ -251,49 +251,49 @@ TDD cycle:
 ## When Mocks Become Too Complex
 
 **Warning signs:**
-- Mock setup longer than test logic
-- Mocking everything to make test pass
+- Mock setup longer than spec logic
+- Mocking everything to make spec pass
 - Mocks missing methods real components have
 - Test breaks when mock changes
 
 **your human partner's question:** "Do we need to be using a mock here?"
 
-**Consider:** Integration tests with real components often simpler than complex mocks
+**Consider:** Integration specs with real components often simpler than complex mocks
 
-## TDD Prevents These Anti-Patterns
+## SDD Prevents These Anti-Patterns
 
-**Why TDD helps:**
-1. **Write test first** → Forces you to think about what you're actually testing
-2. **Watch it fail** → Confirms test tests real behavior, not mocks
-3. **Minimal implementation** → No test-only methods creep in
-4. **Real dependencies** → You see what the test actually needs before mocking
+**Why SDD helps:**
+1. **Write spec first** → Forces you to think about what you're actually specing
+2. **Watch it fail** → Confirms spec specs real behavior, not mocks
+3. **Minimal implementation** → No spec-only methods creep in
+4. **Real dependencies** → You see what the spec actually needs before mocking
 
-**If you're testing mock behavior, you violated TDD** - you added mocks without watching test fail against real code first.
+**If you're specing mock behavior, you violated SDD** - you added mocks without watching spec fail against real code first.
 
 ## Quick Reference
 
 | Anti-Pattern | Fix |
 |--------------|-----|
 | Assert on mock elements | Test real component or unmock it |
-| Test-only methods in production | Move to test utilities |
+| Test-only methods in production | Move to spec utilities |
 | Mock without understanding | Understand dependencies first, mock minimally |
 | Incomplete mocks | Mirror real API completely |
-| Tests as afterthought | TDD - tests first |
-| Over-complex mocks | Consider integration tests |
+| Tests as afterthought | SDD - specs first |
+| Over-complex mocks | Consider integration specs |
 
 ## Red Flags
 
-- Assertion checks for `*-mock` test IDs
-- Methods only called in test files
-- Mock setup is >50% of test
+- Assertion checks for `*-mock` spec IDs
+- Methods only called in spec files
+- Mock setup is >50% of spec
 - Test fails when you remove mock
 - Can't explain why mock is needed
 - Mocking "just to be safe"
 
 ## The Bottom Line
 
-**Mocks are tools to isolate, not things to test.**
+**Mocks are tools to isolate, not things to spec.**
 
-If TDD reveals you're testing mock behavior, you've gone wrong.
+If SDD reveals you're specing mock behavior, you've gone wrong.
 
 Fix: Test real behavior or question why you're mocking at all.

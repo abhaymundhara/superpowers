@@ -11,13 +11,13 @@ description: Use when creating new skills, editing existing skills, or verifying
 
 **Personal skills live in agent-specific directories (`~/.claude/skills` for Claude Code, `~/.codex/skills` for Codex)** 
 
-You write test cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch tests pass (agents comply), and refactor (close loopholes).
+You write spec cases (pressure scenarios with subagents), watch them fail (baseline behavior), write the skill (documentation), watch specs pass (agents comply), and refactor (close loopholes).
 
 **Core principle:** If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.
 
-**REQUIRED BACKGROUND:** You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts TDD to documentation.
+**REQUIRED BACKGROUND:** You MUST understand superpowers:spec-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill adapts SDD to documentation.
 
-**Official guidance:** For Anthropic's official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the TDD-focused approach in this skill.
+**Official guidance:** For Anthropic's official skill authoring best practices, see anthropic-best-practices.md. This document provides additional patterns and guidelines that complement the SDD-focused approach in this skill.
 
 ## What is a Skill?
 
@@ -27,16 +27,16 @@ A **skill** is a reference guide for proven techniques, patterns, or tools. Skil
 
 **Skills are NOT:** Narratives about how you solved a problem once
 
-## TDD Mapping for Skills
+## SDD Mapping for Skills
 
-| TDD Concept | Skill Creation |
+| SDD Concept | Skill Creation |
 |-------------|----------------|
 | **Test case** | Pressure scenario with subagent |
 | **Production code** | Skill document (SKILL.md) |
 | **Test fails (RED)** | Agent violates rule without skill (baseline) |
 | **Test passes (GREEN)** | Agent complies with skill present |
 | **Refactor** | Close loopholes while maintaining compliance |
-| **Write test first** | Run baseline scenario BEFORE writing skill |
+| **Write spec first** | Run baseline scenario BEFORE writing skill |
 | **Watch it fail** | Document exact rationalizations agent uses |
 | **Minimal code** | Write skill addressing those specific violations |
 | **Watch it pass** | Verify agent now complies |
@@ -162,7 +162,7 @@ When the description was changed to just "Use when executing implementation plan
 description: Use when executing plans - dispatches subagent per task with code review between tasks
 
 # ❌ BAD: Too much process detail
-description: Use for TDD - write test first, watch it fail, write minimal code, refactor
+description: Use for SDD - write test first, watch it fail, write minimal code, refactor
 
 # ✅ GOOD: Just triggering conditions, no workflow summary
 description: Use when executing implementation plans with independent tasks in the current session
@@ -280,10 +280,10 @@ wc -w skills/path/SKILL.md
 **When writing documentation that references other skills:**
 
 Use skill name only, with explicit requirement markers:
-- ✅ Good: `**REQUIRED SUB-SKILL:** Use superpowers:test-driven-development`
+- ✅ Good: `**REQUIRED SUB-SKILL:** Use superpowers:spec-driven-development`
 - ✅ Good: `**REQUIRED BACKGROUND:** You MUST understand superpowers:systematic-debugging`
-- ❌ Bad: `See skills/testing/test-driven-development` (unclear if required)
-- ❌ Bad: `@skills/testing/test-driven-development/SKILL.md` (force-loads, burns context)
+- ❌ Bad: `See skills/testing/spec-driven-development` (unclear if required)
+- ❌ Bad: `@skills/testing/spec-driven-development/SKILL.md` (force-loads, burns context)
 
 **Why no @ links:** `@` syntax force-loads files immediately, consuming 200k+ context before you need them.
 
@@ -371,7 +371,7 @@ pptx/
 ```
 When: Reference material too large for inline
 
-## The Iron Law (Same as TDD)
+## The Iron Law (Same as SDD)
 
 ```
 NO SKILL WITHOUT A FAILING TEST FIRST
@@ -390,7 +390,7 @@ Edit skill without testing? Same violation.
 - Don't "adapt" while running tests
 - Delete means delete
 
-**REQUIRED BACKGROUND:** The superpowers:test-driven-development skill explains why this matters. Same principles apply to documentation.
+**REQUIRED BACKGROUND:** The superpowers:spec-driven-development skill explains why this matters. Same principles apply to documentation.
 
 ## Testing All Skill Types
 
@@ -398,7 +398,7 @@ Different skill types need different test approaches:
 
 ### Discipline-Enforcing Skills (rules/requirements)
 
-**Examples:** TDD, verification-before-completion, designing-before-coding
+**Examples:** SDD, verification-before-completion, designing-before-coding
 
 **Test with:**
 - Academic questions: Do they understand the rules?
@@ -458,7 +458,7 @@ Different skill types need different test approaches:
 
 ## Bulletproofing Skills Against Rationalization
 
-Skills that enforce discipline (like TDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
+Skills that enforce discipline (like SDD) need to resist rationalization. Agents are smart and will find loopholes when under pressure.
 
 **Psychology note:** Understanding WHY persuasion techniques work helps you apply them systematically. See persuasion-principles.md for research foundation (Cialdini, 2021; Meincke et al., 2025) on authority, commitment, scarcity, social proof, and unity principles.
 
@@ -519,7 +519,7 @@ Make it easy for agents to self-check when rationalizing:
 - "It's about spirit not ritual"
 - "This is different because..."
 
-**All of these mean: Delete code. Start over with TDD.**
+**All of these mean: Delete code. Start over with SDD.**
 ```
 
 ### Update CSO for Violation Symptoms
@@ -532,7 +532,7 @@ description: use when implementing any feature or bugfix, before writing impleme
 
 ## RED-GREEN-REFACTOR for Skills
 
-Follow the TDD cycle:
+Follow the SDD cycle:
 
 ### RED: Write Failing Test (Baseline)
 
@@ -593,7 +593,7 @@ helper1, helper2, step3, pattern4
 
 Deploying untested skills = deploying untested code. It's a violation of quality standards.
 
-## Skill Creation Checklist (TDD Adapted)
+## Skill Creation Checklist (SDD Adapted)
 
 **IMPORTANT: Use TodoWrite to create todos for EACH checklist item below.**
 
@@ -646,10 +646,10 @@ How future Claude finds your skill:
 
 ## The Bottom Line
 
-**Creating skills IS TDD for process documentation.**
+**Creating skills IS SDD for process documentation.**
 
-Same Iron Law: No skill without failing test first.
+Same Iron Law: No skill without failing spec first.
 Same cycle: RED (baseline) → GREEN (write skill) → REFACTOR (close loopholes).
 Same benefits: Better quality, fewer surprises, bulletproof results.
 
-If you follow TDD for code, follow it for skills. It's the same discipline applied to documentation.
+If you follow SDD for code, follow it for skills. It's the same discipline applied to documentation.

@@ -84,7 +84,7 @@ New prompt templates in `skills/subagent-driven-development/`:
 
 **Testing anti-patterns reference**
 
-`test-driven-development` now includes `testing-anti-patterns.md` covering:
+`spec-driven-development` now includes `testing-anti-patterns.md` covering:
 - Testing mock behavior instead of real behavior
 - Adding test-only methods to production classes
 - Mocking without understanding dependencies
@@ -123,7 +123,7 @@ Description changed to imperative: "You MUST use this before any creative work�
 **Skill consolidation** - Six standalone skills merged:
 - `root-cause-tracing`, `defense-in-depth`, `condition-based-waiting` → bundled in `systematic-debugging/`
 - `testing-skills-with-subagents` → bundled in `writing-skills/`
-- `testing-anti-patterns` → bundled in `test-driven-development/`
+- `testing-anti-patterns` → bundled in `spec-driven-development/`
 - `sharing-skills` removed (obsolete)
 
 ### Other Improvements
@@ -306,7 +306,7 @@ These changes address observed agent behavior where they rationalize around skil
 
 **Skill reference namespace standardization**
 - All internal skill references now use `superpowers:` namespace prefix
-- Updated format: `superpowers:test-driven-development` (previously just `test-driven-development`)
+- Updated format: `superpowers:spec-driven-development` (previously just `spec-driven-development`)
 - Affects all REQUIRED SUB-SKILL, RECOMMENDED SUB-SKILL, and REQUIRED BACKGROUND references
 - Aligns with how skills are invoked using the Skill tool
 - Files updated: brainstorming, executing-plans, subagent-driven-development, systematic-debugging, testing-skills-with-subagents, writing-plans, writing-skills
@@ -330,7 +330,7 @@ These changes address observed agent behavior where they rationalize around skil
 
 **Skill names standardized to lowercase**
 - All skill frontmatter `name:` fields now use lowercase kebab-case matching directory names
-- Examples: `brainstorming`, `test-driven-development`, `using-git-worktrees`
+- Examples: `brainstorming`, `spec-driven-development`, `using-git-worktrees`
 - All skill announcements and cross-references updated to lowercase format
 - This ensures consistent naming across directory names, frontmatter, and documentation
 
